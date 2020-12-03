@@ -68,72 +68,102 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                     {"filter": {"selection": "timeBrush"}},
                                     {"filter": {"selection": "salesBrush"}}
                                 ],
-                                "mark": "point",
                                 "width":ctx.w - 1,
                                 "height": ctx.h,
-                                "selection": {
-                                    "albumBrush": {"type": "single"},
-                                    "albumHover": {
-                                        "type": "multi",
-                                        "on": "mouseover", "empty": "none"
+                                "layer":[
+                                    {
+                                        "mark":{
+                                            "type":"text",
+                                            "xOffset":-ctx.w/2 + 20,
+                                            "yOffset":ctx.h/2 - 20,
+                                            "align": "left",
+                                            "fontSize":20,
+                                            "text":"number of albums:"
+                                        },
+                                        "encoding":{
+                                            "color":{"value":"grey"}
+                                        }
+                                    },{
+                                        "mark":{
+                                            "type":"text",
+                                            "xOffset":-ctx.w/2 + 210,
+                                            "yOffset":ctx.h/2 - 20,
+                                            "align": "left",
+                                            "fontSize":20
+                                        },
+                                        "encoding":{
+                                            "text":{
+                                                "aggregate":"count"
+                                            },
+                                            "color":{"value":"grey"}
+                                        }
+                                    },{
+                                        "mark": "point",
+                                        "selection": {
+                                            "albumBrush": {"type": "single"},
+                                            "albumHover": {
+                                                "type": "multi",
+                                                "on": "mouseover", "empty": "none"
+                                            }
+                                        },
+                                        "encoding": {
+                                            "x": {
+                                                "field": "releaseDate",
+                                                "type": "temporal",
+                                                "timeUnit": "yearmonthdate",
+                                                "axis":{"title": "Release Date"}
+                                            },
+                                            "y": {
+                                                "field": "sales",
+                                                "type": "quantitative",
+                                                "axis":{"title": "Sales (CNY)"},
+                                                "scale": {"type": scaleType}
+                                            },
+                                            "size": {
+                                                "condition":{
+                                                    "selection":"albumHover","value":200
+                                                },
+                                                "value": 30
+                                            },
+                                            "shape": {"type": "nominal", "field": "singerGender",
+                                                      "scale": {
+                                                        "domain":["male","female"],
+                                                        "range":["square","circle"],
+                                                      },
+                                                      "legend": {
+                                                          "title": "Singer Gender",
+                                                          "orient":"none",
+                                                          "legendX":1000
+                                                      }
+                                                    },
+                                            "color": {
+                                                "condition":{
+                                                    "selection":"albumBrush",
+                                                    "field": "price",
+                                                    "type": "quantitative",
+                                                    "scale": {
+                                                        "scheme": {"name":"reds","extent": [0.3,1.3]},
+                                                    },
+                                                    "legend": {
+                                                        "title": "Price",
+                                                        "orient":"none",
+                                                        "legendX":1000,
+                                                        "legendY": 60,
+                                                        "tickCount":4,
+                                                        "gradientLength":200
+                                                    },
+                                                },
+                                                "value": "lightgray"
+                                            },
+                                            "tooltip": [
+                                                {"field": "album", "type": "nominal", "title":"Album"},
+                                                {"field": "singer", "type": "nominal", "title":"Singer"},
+                                                {"field": "sales", "type": "nominal", "title":"Sales (CNY)"},
+                                                {"field": "releaseDate", "type":"temporal", "timeUnit": "yearmonthdate","title":"Release Date"}
+                                            ]
+                                        },
                                     }
-                                },
-                                "encoding": {
-                                    "x": {
-                                        "field": "releaseDate",
-                                        "type": "temporal",
-                                        "timeUnit": "yearmonthdate",
-                                        "axis":{"title": "Release Date"}
-                                    },
-                                    "y": {
-                                        "field": "sales",
-                                        "type": "quantitative",
-                                        "axis":{"title": "Sales (CNY)"},
-                                        "scale": {"type": scaleType}
-                                    },
-                                    "size": {
-                                        "condition":{
-                                            "selection":"albumHover","value":200
-                                        },
-                                        "value": 30
-                                    },
-                                    "shape": {"type": "nominal", "field": "singerGender",
-                                              "scale": {
-                                                "domain":["male","female"],
-                                                "range":["square","circle"],
-                                              },
-                                              "legend": {
-                                                  "title": "Singer Gender",
-                                                  "orient":"none",
-                                                  "legendX":1000
-                                              }
-                                            },
-                                    "color": {
-                                        "condition":{
-                                            "selection":"albumBrush",
-                                            "field": "price",
-                                            "type": "quantitative",
-                                            "scale": {
-                                                "scheme": {"name":"reds","extent": [0.3,1.3]},
-                                            },
-                                            "legend": {
-                                                "title": "Price",
-                                                "orient":"none",
-                                                "legendX":1000,
-                                                "legendY": 60,
-                                                "tickCount":4,
-                                                "gradientLength":200
-                                            },
-                                        },
-                                        "value": "lightgray"
-                                    },
-                                    "tooltip": [
-                                        {"field": "album", "type": "nominal", "title":"Album"},
-                                        {"field": "singer", "type": "nominal", "title":"Singer"},
-                                        {"field": "sales", "type": "nominal", "title":"Sales (CNY)"},
-                                        {"field": "releaseDate", "type":"temporal", "timeUnit": "yearmonthdate","title":"Release Date"}
-                                    ]
-                                }
+                                ],
                             },
                             {
                                 "mark":"area",
