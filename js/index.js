@@ -71,7 +71,13 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                 "mark": "point",
                                 "width":ctx.w - 1,
                                 "height": ctx.h,
-                                "selection": {"albumBrush": {"type": "single"}},
+                                "selection": {
+                                    "albumBrush": {"type": "single"},
+                                    "albumHover": {
+                                        "type": "multi",
+                                        "on": "mouseover", "empty": "none"
+                                    }
+                                },
                                 "encoding": {
                                     "x": {
                                         "field": "releaseDate",
@@ -85,7 +91,12 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                         "axis":{"title": "Sales (CNY)"},
                                         "scale": {"type": scaleType}
                                     },
-                                    "size": {"value": 30},
+                                    "size": {
+                                        "condition":{
+                                            "selection":"albumHover","value":200
+                                        },
+                                        "value": 30
+                                    },
                                     "shape": {"type": "nominal", "field": "singerGender",
                                               "scale": {
                                                 "domain":["male","female"],
@@ -158,7 +169,6 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
             {
                 "width":200,
                 "height":ctx.h,
-                "mark": "bar",
                 "transform":[
                     {"filter": {"selection": "timeBrush"}},
                     {"filter": {"selection": "salesBrush"}},
@@ -179,16 +189,36 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                     "aggregate":"sum",
                     "axis":{"title": "Sales of one platform"}
                     },
-                    "color":{
-                        "field":"platform",
-                        "type": "nominal",
-                        "scale": {"scheme": "platformColors"},
-                        "legend":{"title":"Platform"}
-                    },
                     "tooltip": [
                         {"field": "platform", "type": "nominal", "title":"Music Platform"}
                     ]
-                }
+                },
+                "layer":[
+                    {
+                        "mark":"bar",
+                        "encoding":{
+                            "color":{
+                                "field":"platform",
+                                "type": "nominal",
+                                "scale": {"scheme": "platformColors"},
+                                "legend":{"title":"Platform"}
+                            },
+                        }
+                    },
+                    {
+                        "mark":{
+                            "type":"text",
+                            "dy":- 8
+                        },
+                        "encoding": {
+                            "text": {
+                                "aggregate": "sum",
+                                "field":"platformSales",
+                                "type": "quantitative",
+                            },
+                        }
+                    }
+                ]
             }
         ]
     };
