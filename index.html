@@ -26,7 +26,7 @@
             }
 
             #albums form{
-                margin-left: -180px;
+                margin-left: -230px;
             }
 
         </style>
@@ -35,14 +35,25 @@
     <body onload="createViz();">
         <div id="main">
             <div id="albums">
-                <h1>Scatter plot of Chinese digital album sales</h1>
+                <h1>Chinese digital album sales</h1>
                 <div>
                     <form>
                         <input type="text" name="singerField" id="filter" placeholder="filter by singers"
                        onkeydown="handleKeyEvent(event);"/>
                        <input type="button" value="filter" onclick="filterSinger();" id="filterBt"/>
                        <span>(use "," to separate singers)</span>
-                       <span style="padding-left:5em;">Scale:</span>
+                       <span style="padding-left:3em;">Year:</span>
+                       <select id="yearSel" onchange="setYear();">
+                           <option value="all" selected="selected">all</option>
+                           <option value="2014">2014</option>
+                           <option value="2015">2015</option>
+                           <option value="2016">2016</option>
+                           <option value="2017">2017</option>
+                           <option value="2018">2018</option>
+                           <option value="2019">2019</option>
+                           <option value="2020">2020</option>
+                       </select>
+                       <span style="padding-left:3em;">Scale:</span>
                        <select id="scaleSel" onchange="setScale();">
                            <option value="log" selected="selected">Log</option>
                            <option value="linear">Linear</option>

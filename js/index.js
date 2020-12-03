@@ -1,7 +1,9 @@
 var ctx = { 
   dataFile: "digitalAlbumSales.csv",
   singerFilter : '',
+  selectedYear: 'all',
   scaleType : 'log',
+  scaleType2: 'linear',
   w:800,
   h:600,
   h1:100,
@@ -16,12 +18,12 @@ var ctx = {
 /* initialization of all the graphics */
 var createViz = function(){
     vega.scheme("platformColors", ctx.PLATFORM_COLORS);
-    createAlbumScatterPlot('log', '');
+    createAlbumScatterPlot('log', '', 'all');
     createSalesBoxPlot('linear');
 };
 
 /* create the scatter plot of all the albums */
-var createAlbumScatterPlot = function(scaleType, singerFilter){
+var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
     /* scatterplot: sales vs. price
     showing release date using color,
     showing the gender of singer using shape,
@@ -71,31 +73,28 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                 "width":ctx.w - 1,
                                 "height": ctx.h,
                                 "layer":[
-                                    {
-                                        "mark":{
-                                            "type":"text",
-                                            "xOffset":-ctx.w/2 + 20,
-                                            "yOffset":ctx.h/2 - 20,
-                                            "align": "left",
-                                            "fontSize":20,
-                                            "text":"number of albums:"
+                                    {  
+                                        "title": {
+                                            "text": "Number of albums:",
+                                            "anchor": "start",
+                                            "color":{"value":"#ad494a"},
+                                            "dx":ctx.w - 100,
+                                            "dy":ctx.h + 57,
+                                            "fontSize":16
                                         },
-                                        "encoding":{
-                                            "color":{"value":"grey"}
-                                        }
-                                    },{
                                         "mark":{
                                             "type":"text",
-                                            "xOffset":-ctx.w/2 + 210,
-                                            "yOffset":ctx.h/2 - 20,
+                                            "xOffset":ctx.w/2 - 30,
+                                            "yOffset":ctx.h/2 + 40,
                                             "align": "left",
-                                            "fontSize":20
+                                            "fontWeight":"bold",
+                                            "fontSize":16
                                         },
                                         "encoding":{
                                             "text":{
                                                 "aggregate":"count"
                                             },
-                                            "color":{"value":"grey"}
+                                            "color":{"value":"#ad494a"}
                                         }
                                     },{
                                         "mark": "point",
@@ -199,6 +198,10 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
             {
                 "width":200,
                 "height":ctx.h,
+                "title": {
+                    "text": "Sales in different music platforms",
+                    "anchor": "start"
+                },
                 "transform":[
                     {"filter": {"selection": "timeBrush"}},
                     {"filter": {"selection": "salesBrush"}},
@@ -256,9 +259,12 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
     if (singerFilter != ""){
         vlSpec.transform.push({"filter": {"field": "singer", "oneOf": singerFilter.split(",")}});
     }
+    if (selectedYear != "all"){
+        var year = parseInt(selectedYear);
+        vlSpec.transform.push({"filter": {"field": "releaseDate", "timeUnit": "year", "equal": year}});
+    }
     var vlOpts = {actions:false};
     vegaEmbed("#albumScat", vlSpec, vlOpts);
-    console.log('Update scatter plot, scale type:' + scaleType + ', singer:' + singerFilter);
 };
 
 /* create the box plot of the annual sales */
@@ -325,14 +331,21 @@ var setScale = function(){
     updateScatterPlot();
 };
 
+/* select the year of the scatter plot */
+var setYear = function(){
+    ctx.selectedYear = document.querySelector('#yearSel').value;
+    updateScatterPlot();
+};
+
 /* update the scatter plot when we made some changes */
 var updateScatterPlot = function(){
-    createAlbumScatterPlot(ctx.scaleType, ctx.singerFilter);
+    createAlbumScatterPlot(ctx.scaleType, ctx.singerFilter, ctx.selectedYear);
+    console.log('Update scatter plot, scale type:' + ctx.scaleType + ', singer:' + ctx.singerFilter + ', year:' + ctx.selectedYear);
 };
 
 /* set the scale of the box plot */
 var setScale2 = function(){
-    scaleType = document.querySelector('#scaleSel2').value;
-    createSalesBoxPlot(scaleType);
+    ctx.scaleType2 = document.querySelector('#scaleSel2').value;
+    createSalesBoxPlot(ctx.scaleType2);
 };
 
