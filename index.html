@@ -16,8 +16,17 @@
                 font-family: sans-serif;
             }
 
-            form{
-                padding-left: 300px;
+            #albums,#annual{
+                height: 100vh;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #albums form{
+                margin-left: -180px;
             }
 
         </style>
@@ -26,13 +35,14 @@
     <body onload="createViz();">
         <div id="main">
             <div id="albums">
+                <h1>Scatter plot of Chinese digital album sales</h1>
                 <div>
                     <form>
                         <input type="text" name="singerField" id="filter" placeholder="filter by singers"
                        onkeydown="handleKeyEvent(event);"/>
                        <input type="button" value="filter" onclick="filterSinger();" id="filterBt"/>
                        <span>(use "," to separate singers)</span>
-                       <span class="formLb" style="padding-left:5em;">Scale:</span>
+                       <spanstyle="padding-left:5em;">Scale:</span>
                        <select id="scaleSel" onchange="setScale();">
                            <option value="log" selected="selected">Log</option>
                            <option value="linear">Linear</option>
@@ -41,7 +51,20 @@
                 </div>
                 <div id="albumScat"></div>
             </div>
-            <div id="salesBoxPlot">
+            <hr>
+            <div id="annual">
+                <h1>Box plot of Chinese digital album sales</h1>
+                <div>
+                    <form>
+                       <span>Scale:</span>
+                       <select id="scaleSel2" onchange="setScale2();">
+                           <option value="log">Log</option>
+                           <option value="linear" selected="selected">Linear</option>
+                       </select>
+                    </form>
+                </div>
+                <div id="salesBoxPlot">
+                </div>
             </div>
       </div>
 

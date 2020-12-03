@@ -3,7 +3,7 @@ var ctx = {
   singerFilter : '',
   scaleType : 'log',
   w:800,
-  h:700,
+  h:600,
   h1:100,
   w1:50,
   MIN_YEAR: 2014,
@@ -17,7 +17,7 @@ var ctx = {
 var createViz = function(){
     vega.scheme("platformColors", ctx.PLATFORM_COLORS);
     createAlbumScatterPlot('log', '');
-    createSalesBoxPlot();
+    createSalesBoxPlot('linear');
 };
 
 /* create the scatter plot of all the albums */
@@ -35,7 +35,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
             {"filter": {"field": "releaseDate", "type": "temporal",
             "timeUnit": "year", "gte": ctx.MIN_YEAR}},
             {"filter": {"field": "price", "lte": ctx.MAX_PRICE}},
-            {"filter": {"field": "totalSales", "gte": ctx.MIN_SALES}},
+            {"filter": {"field": "sales", "gte": ctx.MIN_SALES}},
         ],
         "spacing": 100,
         "hconcat": [
@@ -51,7 +51,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                         },
                         "encoding": {
                             "y": {
-                                "field": "totalSales",
+                                "field": "sales",
                                 "type": "quantitative",
                                 "axis":{"title": null},
                                 "scale": {"type": scaleType}
@@ -80,7 +80,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                         "axis":{"title": "Release Date"}
                                     },
                                     "y": {
-                                        "field": "totalSales",
+                                        "field": "sales",
                                         "type": "quantitative",
                                         "axis":{"title": "Sales (CNY)"},
                                         "scale": {"type": scaleType}
@@ -120,7 +120,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                     "tooltip": [
                                         {"field": "album", "type": "nominal", "title":"Album"},
                                         {"field": "singer", "type": "nominal", "title":"Singer"},
-                                        {"field": "totalSales", "type": "nominal", "title":"Sales (CNY)"},
+                                        {"field": "sales", "type": "nominal", "title":"Sales (CNY)"},
                                         {"field": "releaseDate", "type":"temporal", "timeUnit": "yearmonthdate","title":"Release Date"}
                                     ]
                                 }
@@ -132,7 +132,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                 "selection": {"timeBrush": {"encodings":["x"],"type": "interval"}},
                                 "transform": [
                                             {"sort": [{"field": "releaseDate"}],
-                                            "window": [{"field": "totalSales", "op": "sum", "as": "cumulative_sales"}],
+                                            "window": [{"field": "sales", "op": "sum", "as": "cumulative_sales"}],
                                             "frame": [null, 0]}],
                                 "encoding": {
                                     "x": {
@@ -197,13 +197,51 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
     if (singerFilter != ""){
         vlSpec.transform.push({"filter": {"field": "singer", "oneOf": singerFilter.split(",")}});
     }
-    var vlOpts = {actions:true};
+    var vlOpts = {actions:false};
     vegaEmbed("#albumScat", vlSpec, vlOpts);
     console.log('Update scatter plot, scale type:' + scaleType + ', singer:' + singerFilter);
 };
 
 /* create the box plot of the annual sales */
-var createSalesBoxPlot = function(){
+var createSalesBoxPlot = function(scaleType){
+    vlSpec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "data": {
+            "url": ctx.dataFile,
+        },
+        "transform": [
+            {"filter": {"field": "releaseDate", "type": "temporal",
+            "timeUnit": "year", "gte": ctx.MIN_YEAR}},
+            {"filter": {"field": "price", "lte": ctx.MAX_PRICE}},
+            {"filter": {"field": "sales", "gte": ctx.MIN_SALES}},
+        ],
+        "mark": "boxplot",
+        "encoding": {
+            "x": {
+                "field": "releaseDate",
+                "type": "temporal",
+                "timeUnit":"year",
+                "axis": {
+                    "title": "Release Date",
+                }
+            },
+            "y": {
+                "field": "sales",
+                "type": "quantitative",
+                "scale": {"type": scaleType,"zero": false}
+            },
+            "color":{
+                "field":"releaseDate",
+                "timeUnit":"year",
+                "type":"nominal",
+                "legend":{
+                    "format":"%Y"
+                }
+            }
+        }
+    };
+    vlOpts = {width:800,height:500,actions:false};
+    vegaEmbed("#salesBoxPlot", vlSpec, vlOpts);
 };
 
 /* handle the key event for singer filtering */
@@ -231,5 +269,11 @@ var setScale = function(){
 /* update the scatter plot when we made some changes */
 var updateScatterPlot = function(){
     createAlbumScatterPlot(ctx.scaleType, ctx.singerFilter);
+};
+
+/* set the scale of the box plot */
+var setScale2 = function(){
+    scaleType = document.querySelector('#scaleSel2').value;
+    createSalesBoxPlot(scaleType);
 };
 
