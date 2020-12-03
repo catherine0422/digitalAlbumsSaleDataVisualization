@@ -1,6 +1,6 @@
 var ctx = { 
   dataFile: "digitalAlbumSales.csv",
-  singerFilter : '*',
+  singerFilter : '',
   scaleType : 'log',
   w:800,
   h:700,
@@ -16,7 +16,7 @@ var ctx = {
 /* initialization of all the graphics */
 var createViz = function(){
     vega.scheme("platformColors", ctx.PLATFORM_COLORS);
-    createAlbumScatterPlot('log', '*');
+    createAlbumScatterPlot('log', '');
     createSalesBoxPlot();
 };
 
@@ -193,7 +193,8 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
             }
         ]
     };
-    if (singerFilter != "*"){
+    console.log(singerFilter)
+    if (singerFilter != ""){
         vlSpec.transform.push({"filter": {"field": "singer", "oneOf": singerFilter.split(",")}});
     }
     var vlOpts = {actions:true};
@@ -217,9 +218,6 @@ var handleKeyEvent = function(e){
 /* fiter the data by singer */
 var filterSinger = function(){
     var singer = document.querySelector('#filter').value;
-    if (singer.trim()===''){
-        return;
-    }
     ctx.singerFilter = singer;
     updateScatterPlot();
 };
