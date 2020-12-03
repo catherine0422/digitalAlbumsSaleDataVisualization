@@ -37,7 +37,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
             {"filter": {"field": "price", "lte": ctx.MAX_PRICE}},
             {"filter": {"field": "sales", "gte": ctx.MIN_SALES}},
         ],
-        "spacing": 100,
+        "spacing": 60,
         "hconcat": [
             {
                 "hconcat":[
@@ -85,7 +85,6 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                         "axis":{"title": "Sales (CNY)"},
                                         "scale": {"type": scaleType}
                                     },
-                                    "stroke": {"value": null},
                                     "size": {"value": 30},
                                     "shape": {"type": "nominal", "field": "singerGender",
                                               "scale": {
@@ -98,7 +97,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter){
                                                   "legendX":1000
                                               }
                                             },
-                                    "fill": {
+                                    "color": {
                                         "condition":{
                                             "selection":"albumBrush",
                                             "field": "price",
