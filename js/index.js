@@ -27,7 +27,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
     /* scatterplot: sales vs. price
     showing release date using color,
     showing the gender of singer using shape,
-    sync'ed with 3 line bars chart at right (brushing and linking) */
+    sync'ed with 3 bars on left, bottom and right (brushing and clicking) */
     var vlSpec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
         "data": {
@@ -59,6 +59,15 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
                                 "scale": {"type": scaleType}
                             },
                             "color":{
+                                "condition":{
+                                    "selection":"salesBrush",
+                                    "field": "price",
+                                    "type": "quantitative",
+                                    "scale": {
+                                        "scheme": {"name":"reds","extent": [0.3,1.3]},
+                                    },
+                                    "legend": null,
+                                },
                                 "value":ctx.GRAY
                             }
                         }
@@ -110,7 +119,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
                                                 "field": "releaseDate",
                                                 "type": "temporal",
                                                 "timeUnit": "yearmonthdate",
-                                                "axis":{"title": "Release Date"}
+                                                "axis":{"title": "Release Date", "format":"%b %Y"}
                                             },
                                             "y": {
                                                 "field": "sales",
@@ -132,7 +141,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
                                                       "legend": {
                                                           "title": "Singer Gender",
                                                           "orient":"none",
-                                                          "legendX":1000
+                                                          "legendX":985
                                                       }
                                                     },
                                             "color": {
@@ -146,7 +155,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
                                                     "legend": {
                                                         "title": "Price",
                                                         "orient":"none",
-                                                        "legendX":1000,
+                                                        "legendX":825,
                                                         "legendY": 60,
                                                         "tickCount":4,
                                                         "gradientLength":200
@@ -165,10 +174,8 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
                                 ],
                             },
                             {
-                                "mark":"area",
                                 "height":ctx.h1,
                                 "width":ctx.w,
-                                "selection": {"timeBrush": {"encodings":["x"],"type": "interval"}},
                                 "transform": [
                                             {"sort": [{"field": "releaseDate"}],
                                             "window": [{"field": "sales", "op": "sum", "as": "cumulative_sales"}],
@@ -178,17 +185,46 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
                                       "timeUnit": "yearmonthdate", 
                                       "field": "releaseDate",
                                       "type": "temporal",
-                                      "axis":{"title": null}
-                                    },
-                                    "y": {
-                                      "field": "cumulative_sales",
-                                      "type":"quantitative",
-                                      "axis":{"title": "Cumulative Sales"}
-                                    },
-                                    "color":{
-                                        "value":ctx.GRAY
+                                      "axis":{"title": null, "format":"%b %Y"}
                                     }
-                                  }
+                                },
+                                "layer":[
+                                    {
+                                        "mark":"area",
+                                        "selection": {"timeBrush": {"encodings":["x"],"type": "interval"}},
+                                        "encoding":{
+                                            "y": {
+                                                "field": "cumulative_sales",
+                                                "type":"quantitative",
+                                                "axis":{"title": "Cumulative Sales"}
+                                              },
+                                              "color":{
+                                                  "value":ctx.GRAY
+                                              }
+                                        }
+                                    },
+                                    {
+                                        "mark":"line",
+                                        "transform":[{"fold":["QQ","WYY","KUWO","KUGOU","MIGU"],
+                                                     "as":["platform","platformSales"]},
+                                                    {"sort": [{"field": "releaseDate"}],
+                                                     "window": [{"field": "platformSales", "op": "sum", "as": "plateformCumulativeSales"}],
+                                                     "groupby":["platform"],
+                                                     "frame": [null, 0]}],
+                                        "encoding":{
+                                            "y":{
+                                                "field":"plateformCumulativeSales",
+                                                "type":"quantitative"
+                                            },
+                                            "color":{
+                                                "field":"platform",
+                                                "type": "nominal",
+                                                "scale": {"scheme": "platformColors"},
+                                                "legend":null
+                                            },
+                                        }
+                                    }
+                                ]
                             },
                         ]
                     }
@@ -199,7 +235,7 @@ var createAlbumScatterPlot = function(scaleType, singerFilter, selectedYear){
                 "width":200,
                 "height":ctx.h,
                 "title": {
-                    "text": "Sales in different music platforms",
+                    "text": "Proportion of sales in different music platforms",
                     "anchor": "start"
                 },
                 "transform":[
@@ -279,6 +315,13 @@ var createSalesBoxPlot = function(scaleType){
             "timeUnit": "year", "gte": ctx.MIN_YEAR}},
             {"filter": {"field": "price", "lte": ctx.MAX_PRICE}},
             {"filter": {"field": "sales", "gte": ctx.MIN_SALES}},
+            {"timeUnit": "year", "field": "releaseDate", "as": "year"},
+            {"joinaggregate": [{
+                "op": "count",
+                "as": "albumCount"
+              }],
+              "groupby":["year"]
+            }
         ],
         "mark": "boxplot",
         "encoding": {
@@ -287,7 +330,7 @@ var createSalesBoxPlot = function(scaleType){
                 "type": "temporal",
                 "timeUnit":"year",
                 "axis": {
-                    "title": "Release Date",
+                    "title": "Release Year",
                 }
             },
             "y": {
@@ -296,16 +339,15 @@ var createSalesBoxPlot = function(scaleType){
                 "scale": {"type": scaleType,"zero": false}
             },
             "color":{
-                "field":"releaseDate",
-                "timeUnit":"year",
-                "type":"nominal",
+                "field":"albumCount",
+                "type":"quantitative",
                 "legend":{
-                    "format":"%Y"
+                    "title":"Number of albums"
                 }
             }
         }
     };
-    vlOpts = {width:800,height:500,actions:false};
+    vlOpts = {width:600,height:400,actions:false};
     vegaEmbed("#salesBoxPlot", vlSpec, vlOpts);
 };
 
