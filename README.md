@@ -27,19 +27,19 @@ In order to do the visualization, we need to pre-process the data.
 
  	In order to draw an area chart of the total digital album sales from 2014 to 2020, we need to calculate the cumulative sales. We use the "window" method in vega-light to do the transformation. Figure 2 is a presentation of data with cumulative sales.
 
-![data_step1](.\images\data_step1.jpg)
+![data_step1](./images/data_step1.jpg)
 
 #### Fold platforms
 
  	In order to draw an line chart of the sales change in different music platforms, we need to fold the sales of different platforms and calculate the corresponding cumulative sales. We use the "fold" and "window" methods in vega-light to do the transformation. Figure 3 is a presentation of data with folded platforms.
 
-![data_step2](.\images\data_step2.jpg)
+![data_step2](./images/data_step2.jpg)
 
 ## Graph of general information
 
 ​	In order to take an overview of the digital album sales change, We draw a box plot of the sales grouped by release year. We use a sequential color scheme to show the number of albums released each year, which is an quantitative attribute here.
 
-![boxplot_general_infomation](.\images\boxplot_general_infomation.jpg)
+![boxplot_general_infomation](./images/boxplot_general_infomation.jpg)
 
 ​	As the scale of sales is large, we can toggle between linear and log scale for the y axis.
 
@@ -49,7 +49,7 @@ In order to do the visualization, we need to pre-process the data.
 
 ​	Then we start to look at more detailed information by drawing an interactive scatter plot of all the digital albums. The graph has multiple views: the main scatter plot of the digital albums by release date and sales; the tick chart on the left which plots sales of all the albums on the y axis; the area chart on the bottom which shows the change of total sales; the bar chart on the right which shows the proportion of sales in different music platforms.
 
-![interaction](.\images\scatterplot_detailed_infomation.jpg)
+![interaction](./images/scatterplot_detailed_infomation.jpg)
 
 ###Scatter plot of digital albums
 
@@ -73,7 +73,7 @@ In order to do the visualization, we need to pre-process the data.
 
 ## Interaction
 
-![scatterplot_detailed_infomation](.\images\interaction.jpg)
+![scatterplot_detailed_infomation](./images/interaction.jpg)
 
 There are many interactions we can do with this graph:
 
@@ -91,4 +91,4 @@ There are many interactions we can do with this graph:
 
 ​	On using the interactions, we can find out more results that are quite interesting. For example, as shown in Figure below, all the albums whose sales are bigger than 50 millions are released after 2019. Which can show the development of the digital album market. 
 
-![salesLargerThen50mi](.\images\salesLargerThen50mi.jpg)
+![salesLargerThen50mi](./images/salesLargerThen50mi.jpg)
