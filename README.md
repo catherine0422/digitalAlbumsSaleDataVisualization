@@ -1,7 +1,7 @@
 # Visualization of Chinese digital album sales
 ## Introduction
 
- 	With the rapid development of electronic products, the music industry has also came into a new era: digital music. For a long time, Chinese are used to listen all songs for free, they have no awareness of paying for music. But in the recent years, led by top singers and many music platforms, listeners began to accept a new form of payment: digital albums. It’s a quiet huge market that developed with amazing speed.
+​	With the rapid development of electronic products, the music industry has also came into a new era: digital music. For a long time, Chinese are used to listen all songs for free, they have no awareness of paying for music. But in the recent years, led by top singers and many music platforms, listeners began to accept a new form of payment: digital albums. It’s a quiet huge market that developed with amazing speed.
 
 ​	In this project, we will use two graphs to visualize respectively the general and detailed information of Chinese digital album sales from 2014 to 2020. 
 
@@ -13,7 +13,7 @@
 
 ​	The dataset is downloaded from the site [数字专辑销售数据](http://y.saoju.net/szzj/) . This dataset contains information of all Chinese digital albums from 1980. For each album, we have the album name, the singer name, the singer gender, the release date, the album price, the sales and the proportion of sales in 5 different music platforms (QQ, WYY, KUGOU, KUWO, MIGU). Figure 1 is a presentation of the original data.
 
-![data_origin](.\images\data_origin.jpg)
+![data_origin](./images/data_origin.jpg)
 
 ###Data pre-processing
 
