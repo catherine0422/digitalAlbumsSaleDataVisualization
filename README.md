@@ -15,23 +15,23 @@
 
 ![data_origin](./images/data_origin.jpg)
 
-###Data pre-processing
+### Data pre-processing
 
-In order to do the visualization, we need to pre-process the data.
+​	 In order to do the visualization, we need to pre-process the data.
 
-####Filter the data
+#### Filter the data
 
- 	First of all, we filter the data by release date, to get the album which released after 2014. Then in order to get a reasonable scale, we exclude the extreme data. We filter the data by album price to get the album with price under 30 CYN, and filter the data by sales to get the album with sales bigger than 100 CYN.
+​	 First of all, we filter the data by release date, to get the album which released after 2014. Then in order to get a reasonable scale, we exclude the extreme data. We filter the data by album price to get the album with price under 30 CYN, and filter the data by sales to get the album with sales bigger than 100 CYN.
 
 #### Calculate cumulative sales
 
- 	In order to draw an area chart of the total digital album sales from 2014 to 2020, we need to calculate the cumulative sales. We use the "window" method in vega-light to do the transformation. Figure 2 is a presentation of data with cumulative sales.
+​		In order to draw an area chart of the total digital album sales from 2014 to 2020, we need to calculate the cumulative sales. We use the "window" method in vega-light to do the transformation. Figure 2 is a presentation of data with cumulative sales.
 
 ![data_step1](./images/data_step1.jpg)
 
 #### Fold platforms
 
- 	In order to draw an line chart of the sales change in different music platforms, we need to fold the sales of different platforms and calculate the corresponding cumulative sales. We use the "fold" and "window" methods in vega-light to do the transformation. Figure 3 is a presentation of data with folded platforms.
+​	 In order to draw an line chart of the sales change in different music platforms, we need to fold the sales of different platforms and calculate the corresponding cumulative sales. We use the "fold" and "window" methods in vega-light to do the transformation. Figure 3 is a presentation of data with folded platforms.
 
 ![data_step2](./images/data_step2.jpg)
 
@@ -51,17 +51,17 @@ In order to do the visualization, we need to pre-process the data.
 
 ![interaction](./images/scatterplot_detailed_infomation.jpg)
 
-###Scatter plot of digital albums
+### Scatter plot of digital albums
 
 ​	We draw a scatter plot of digital albums by release date and sales. We use shape to embed the singer gender since it's a nominal attribute. We use red sequential color scheme to embed the price of albums since it's a quantitative attribute. At the right-bottom of the view, I add a text to show the total count of albums displayed in the scatter plot.
 
-###Tick plot of digital albums
+### Tick plot of digital albums
 
 ​	On the left of the main scatter plot, we draw a tick plot of digital albums. The color embedding is the same as in the scatter plot to keep the consistency. 
 
 ​	This plot shows the general distribution of digital album sales. We can use it to select the interval of sales to be shown in the main plot.
 
-###Area chart of cumulative sales
+### Area chart of cumulative sales
 
 ​	On the bottom of the main scatter plot, we draw an area chart of total sales from 2014 to 2020. We add a layer to draw lines that represent total sales in different music platforms. 
 
